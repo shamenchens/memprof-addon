@@ -14,7 +14,7 @@ XPCOMUtils.defineLazyModuleGetter(this, "promise",
   "resource://gre/modules/commonjs/sdk/core/promise.js", "Promise");
 
 XPCOMUtils.defineLazyGetter(this, "toolStrings", () =>
-  Services.strings.createBundle("chrome://my-addon/locale/strings.properties"));
+  Services.strings.createBundle("chrome://memory-profiler-ui/locale/strings.properties"));
 
 /**
  * This file has access to the `window` and `document` objects of the add-on's
@@ -33,7 +33,7 @@ XPCOMUtils.defineLazyGetter(this, "toolStrings", () =>
  */
 function startup(toolbox, target) {
   // $("#hello").textContent = toolStrings.GetStringFromName("greeting");
-  $("#hello").textContent = toolStrings.formatStringFromName("customizedGreeting", ["MyAddon"], 1);
+  $("#hello").textContent = toolStrings.formatStringFromName("customizedGreeting", ["Memory Profiler"], 1);
 
   return promise.resolve();
 }

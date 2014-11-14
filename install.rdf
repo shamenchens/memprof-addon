@@ -6,22 +6,22 @@
   <Description about="urn:mozilla:install-manifest">
 
     <!-- The id of the extension. -->
-    <em:id>my-addon@mozilla.com</em:id>
+    <em:id>memory-profiler-ui@mozilla.com</em:id>
 
     <!-- A version string identifying the version of the add-on. -->
     <em:version>0.1</em:version>
 
     <!-- The name of the add-on; intended for display in the UI. -->
-    <em:name>MyAddon</em:name>
+    <em:name>Memory Profiler</em:name>
 
     <!-- A short description to display in the user interface. -->
-    <em:description>Description about MyAddon</em:description>
+    <em:description>Memory Profiler UI</em:description>
 
     <!-- The name of the developer to display in the user interface. -->
-    <em:creator>My Name</em:creator>
+    <em:creator>Kan-Ru Chen</em:creator>
 
     <!-- A link to the add-on home page to display in the user interface. -->
-    <em:homepageURL>http://mozilla.org</em:homepageURL>
+    <em:homepageURL>http://kanru.info</em:homepageURL>
 
     <!-- Target Application this extension can install into,
          with minimum and maximum supported versions. -->
@@ -30,7 +30,7 @@
         <!-- Mozilla Firefox -->
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
         <em:minVersion>29.0a1</em:minVersion>
-        <em:maxVersion>32.0a1</em:maxVersion>
+        <em:maxVersion>38.0a1</em:maxVersion>
       </Description>
     </em:targetApplication>
 

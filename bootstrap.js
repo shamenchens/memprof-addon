@@ -22,7 +22,7 @@ XPCOMUtils.defineLazyGetter(this, "osString", () =>
  * Go to https://developer.mozilla.org/docs/Localization for more information.
  */
 XPCOMUtils.defineLazyGetter(this, "toolStrings", () =>
-  Services.strings.createBundle("chrome://my-addon/locale/strings.properties"));
+  Services.strings.createBundle("chrome://memory-profiler-ui/locale/strings.properties"));
 
 /**
  * `toolDefinition` is an object defining metadata about this add-on.
@@ -30,28 +30,28 @@ XPCOMUtils.defineLazyGetter(this, "toolStrings", () =>
  */
 XPCOMUtils.defineLazyGetter(this, "toolDefinition", () => ({
   // A unique id. Must not contain whitespace.
-  id: "my-addon",
+  id: "memory-profiler-ui",
 
   // The position of the tool's tab within the toolbox
   ordinal: 99,
 
   // Main keybinding key (used as a keyboard shortcut).
-  key: toolStrings.GetStringFromName("MyAddon.commandkey"),
+  key: toolStrings.GetStringFromName("MemoryProfiler.commandkey"),
 
   // Main keybinding modifiers.
   modifiers: osString == "Darwin" ? "accel,alt" : "accel,shift",
 
   // The url of the icon, displayed in the Toolbox.
-  icon: "chrome://my-addon/skin/icon.png",
+  icon: "chrome://memory-profiler-ui/skin/icon.png",
 
   // A tool lives in its own iframe. The Toolbox will load this URL.
-  url: "chrome://my-addon/content/tool.xul",
+  url: "chrome://memory-profiler-ui/content/tool.xul",
 
   // The tool's name. Showed in Firefox' tool menu and in the Toolbox' tab.
-  label: toolStrings.GetStringFromName("MyAddon.label"),
+  label: toolStrings.GetStringFromName("MemoryProfiler.label"),
 
   // The tooltip text shown in the Toolbox's tab.
-  tooltip: toolStrings.GetStringFromName("MyAddon.tooltip"),
+  tooltip: toolStrings.GetStringFromName("MemoryProfiler.tooltip"),
 
   // If the target is not supported, the toolbox will hide the tab.
   // Targets can be local or remote (used in remote debugging).
@@ -62,8 +62,8 @@ XPCOMUtils.defineLazyGetter(this, "toolDefinition", () => ({
   // This function is called when the user select the tool tab.
   // It is called only once the toold definition's URL is loaded.
   build: function(iframeWindow, toolbox) {
-    Cu.import("chrome://my-addon/content/panel.js");
-    let panel = new MyAddonPanel(iframeWindow, toolbox);
+    Cu.import("chrome://memory-profiler-ui/content/panel.js");
+    let panel = new MemoryProfilerPanel(iframeWindow, toolbox);
     return panel.open();
   }
 }));

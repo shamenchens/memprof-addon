@@ -1,3 +1,3 @@
-content my-addon chrome/
-locale  my-addon en-US locale/en-US/
-skin    my-addon classic/1.0 skin/
+content memory-profiler-ui chrome/
+locale  memory-profiler-ui en-US locale/en-US/
+skin    memory-profiler-ui classic/1.0 skin/

@@ -1,4 +1,4 @@
-PROJECT="my-addon"
+PROJECT="memory-profiler-ui"
 VERSION="0.1"
 
 CURRENT_DIR=`pwd`
