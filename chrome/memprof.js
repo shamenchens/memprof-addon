@@ -15,12 +15,6 @@ this.EXPORTED_SYMBOLS = ["MemprofFront"];
 let MemprofActor = protocol.ActorClass({
   typeName: "memprof",
 
-  hello: method(function() {
-  }, {
-    request: {},
-    response: { greeting: RetVal("string") }
-  }),
-
   startProfiler: method(function() {
   }, {
     request: {},
@@ -42,25 +36,25 @@ let MemprofActor = protocol.ActorClass({
   getFrameNameTable: method(function() {
   }, {
     request: {},
-    response: {}
+    response: {
+      ret: RetVal("json")
+    }
   }),
 
   getStacktraceTable: method(function() {
   }, {
     request: {},
-    response: {}
-  }),
-
-  getRetainingEntries: method(function() {
-  }, {
-    request: {},
-    response: {}
+    response: {
+      ret: RetVal("json")
+    }
   }),
 
   getAllocatedEntries: method(function() {
   }, {
     request: {},
-    response: {}
+    response: {
+      ret: RetVal("json")
+    }
   })
 });
 
