@@ -23,6 +23,9 @@
   <body>
     <p>&MemoryProfilerUI.label;</p>
     <p id="hello"></p>
+    <xul:button oncommand="startProfiler();" label="Start Profile"/>
+    <xul:button oncommand="stopProfiler();" label="Stop Profile"/>
+    <xul:button oncommand="getFrameNameTable();" label="Get Profile"/>
   </body>
 
 </html>

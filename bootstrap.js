@@ -56,7 +56,7 @@ XPCOMUtils.defineLazyGetter(this, "toolDefinition", () => ({
   // If the target is not supported, the toolbox will hide the tab.
   // Targets can be local or remote (used in remote debugging).
   isTargetSupported: function(target) {
-    return target.isLocalTab;
+    return !target.isAddon && target.hasActor("memprof");
   },
 
   // This function is called when the user select the tool tab.

@@ -7,9 +7,8 @@ const { classes: Cc, interfaces: Ci, utils: Cu, results: Cr } = Components;
 
 Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
+Cu.import("chrome://memory-profiler-ui/content/memprof.js");
 
-XPCOMUtils.defineLazyModuleGetter(this, "EventEmitter",
-  "resource://gre/modules/devtools/event-emitter.js");
 XPCOMUtils.defineLazyModuleGetter(this, "promise",
   "resource://gre/modules/commonjs/sdk/core/promise.js", "Promise");
 
@@ -20,6 +19,10 @@ XPCOMUtils.defineLazyGetter(this, "toolStrings", () =>
  * This file has access to the `window` and `document` objects of the add-on's
  * iframe, and is included in tool.xul. This is the add-on's controller.
  */
+
+let gToolbox;
+let gTarget;
+let gFront;
 
 /**
  * Called when the user select the tool tab.
@@ -32,9 +35,10 @@ XPCOMUtils.defineLazyGetter(this, "toolStrings", () =>
  *         A promise that should be resolved when the tool completes opening.
  */
 function startup(toolbox, target) {
-  // $("#hello").textContent = toolStrings.GetStringFromName("greeting");
-  $("#hello").textContent = toolStrings.formatStringFromName("customizedGreeting", ["Memory Profiler"], 1);
-
+  target.makeRemote();
+  gToolbox = toolbox;
+  gTarget = target;
+  gFront = new MemprofFront(target.client, target.form);
   return promise.resolve();
 }
 
@@ -45,7 +49,27 @@ function startup(toolbox, target) {
  *         A promise that should be resolved when the tool completes closing.
  */
 function shutdown() {
+  gFront.destroy();
   return promise.resolve();
+}
+
+function hello() {
+  gFront.hello().then(retval => {
+    dump(retval);
+    alert(retval);
+  });
+}
+
+function startProfiler() {
+  gFront.startProfiler();
+}
+
+function stopProfiler() {
+  gFront.stopProfiler();
+}
+
+function getFrameNameTable() {
+  gFront.getFrameNameTable();
 }
 
 /**

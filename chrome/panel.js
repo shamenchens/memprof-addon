@@ -8,6 +8,8 @@ const { classes: Cc, interfaces: Ci, utils: Cu, results: Cr } = Components;
 this.EXPORTED_SYMBOLS = ["MemoryProfilerPanel"];
 
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
+Cu.import("resource://gre/modules/Task.jsm");
+Cu.import("chrome://memory-profiler-ui/content/memprof.js");
 
 XPCOMUtils.defineLazyModuleGetter(this, "EventEmitter",
   "resource://gre/modules/devtools/event-emitter.js");
