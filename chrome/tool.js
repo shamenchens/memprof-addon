@@ -53,13 +53,6 @@ function shutdown() {
   return promise.resolve();
 }
 
-function hello() {
-  gFront.hello().then(retval => {
-    dump(retval);
-    alert(retval);
-  });
-}
-
 function startProfiler() {
   gFront.startProfiler();
 }
@@ -69,7 +62,9 @@ function stopProfiler() {
 }
 
 function getFrameNameTable() {
-  gFront.getFrameNameTable();
+  gFront.getFrameNameTable().then(retval => {
+    alert(retval);
+  });
 }
 
 /**
