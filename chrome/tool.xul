@@ -15,17 +15,58 @@
     <link rel="stylesheet" href="chrome://browser/skin/"/>
     <link rel="stylesheet" href="chrome://browser/skin/devtools/common.css"/>
     <link rel="stylesheet" href="chrome://memory-profiler-ui/skin/style.css"/>
-
+    <link rel="stylesheet" href="chrome://memory-profiler-ui/skin/css/app.css"/>
     <xul:script src="chrome://browser/content/devtools/theme-switching.js"/>
+
+    <xul:script src="js/pad.js"/>
+    <xul:script src="js/hub.js"/>
+    <xul:script src="js/rank.js"/>
+    <xul:script src="js/store.js"/>
+    <xul:script src="js/tree.js"/>
+    <xul:script src="js/profilerManager.js"/>
+    <xul:script src="js/app.js"/>
     <xul:script src="tool.js"/>
   </head>
 
   <body>
-    <p>&MemoryProfilerUI.label;</p>
+    <!--     
     <p id="hello"></p>
     <xul:button oncommand="startProfiler();" label="Start Profile"/>
     <xul:button oncommand="stopProfiler();" label="Stop Profile"/>
     <xul:button oncommand="getFrameNameTable();" label="Get Profile"/>
+     -->
+  <div class="wrapper">
+        <div class="leftPanel subWrapper">
+          <section id="hubPanel" class="panel">
+            <button type="button" id="startRecord">Start</button>
+            <button type="button" id="stopRecord">Stop</button>
+            <button type="button" id="startSearch">Search</button>
+          </section>
+        </div>
+        <div class="rightPanel subWrapper">
+          <section id="searchPanel" class="panel">
+            <span>Search:</span><input type="text" id="searchBar" />
+          </section>
+          <section id="padPanel" class="panel">
+            <canvas id="pad" width="320" height="800"></canvas>
+          </section>
+          <section id="infoTable" class="panel">
+            <!--
+             <ul>
+               <li>
+                <span>self Accu</span><span>total Accu</span>
+                <span>Self Size</span><span>total Size</span>
+                <span>Self HWM</span><span>total HWM</span>
+                <span>name</span>
+               </li>
+             </ul>
+             -->
+          </section>
+          <section id="TreePanel" class="panel">
+            <h3>Tree View</h3>
+          </section>
+        </div>
+      </div>
   </body>
 
 </html>

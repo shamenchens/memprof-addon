@@ -39,6 +39,9 @@ function startup(toolbox, target) {
   gToolbox = toolbox;
   gTarget = target;
   gFront = new MemprofFront(target.client, target.form);
+
+  // start up app
+  app_start(gFront);
   return promise.resolve();
 }
 
