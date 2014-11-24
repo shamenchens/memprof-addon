@@ -49,12 +49,12 @@
       var nodeClass = node.children.length > 0 ? 'treeNode' : 'treeNode leaf';
       var treeNode = '';
       treeNode = '<div class="' + nodeClass + '" data-depth="' + depth +'">' +
-        '<span>' + node.matrix.selfAccu + '</span>' +
-        '<span>' + node.matrix.totalAccu + '</span>' +
-        '<span>' + node.matrix.selfSize + '</span>' +
-        '<span>' + node.matrix.totalSize + '</span>' +
-        '<span>' + node.matrix.selfPeak + '</span>' +
-        '<span>' + node.matrix.totalPeak + '</span>' +
+        '<span>' + humanReadable(node.matrix.selfAccu) + '</span>' +
+        '<span>' + humanReadable(node.matrix.totalAccu) + '</span>' +
+        '<span>' + humanReadable(node.matrix.selfSize) + '</span>' +
+        '<span>' + humanReadable(node.matrix.totalSize) + '</span>' +
+        '<span>' + humanReadable(node.matrix.selfPeak) + '</span>' +
+        '<span>' + humanReadable(node.matrix.totalPeak) + '</span>' +
         '<span>' +
         '<span style="margin-left:' + depth + 'em;"' +
         ' class="collapseButton" title="Expand / Collapse"></span>' +
