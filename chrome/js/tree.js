@@ -59,7 +59,7 @@
         '<span style="margin-left:' + depth + 'em;"' +
         ' class="collapseButton" title="Expand / Collapse"></span>' +
         '<span title="' + node.name + '">' + node.name + '</span>' +
-        '</span>'
+        '</span>' +
         '</div>';
       this._elements.treePanel.innerHTML += treeNode;
       if (node.children.length > 0) {
