@@ -239,7 +239,7 @@ function escapeHtml(html){
 
       var visited = [];
       var traceIdx, tracesEntry, allocatedEntry,
-          traceNames, tracesIdxs, size, i, len;
+          traceNames, size, i, len;
 
       this._treeAddRoot(names[0], 0);
 
@@ -249,20 +249,19 @@ function escapeHtml(html){
         traceIdx = allocatedEntry.traceIdx;
         tracesEntry = traces[allocatedEntry.traceIdx];
         traceNames = this._getTraceNames(tracesEntry);
-        tracesIdxs = this._getTraceIndecies(traceIdx, tracesEntry);
 
         if (visited.indexOf(traceIdx) < 0) {
           visited.push(traceIdx);
           if (tracesEntry.nameIdx === 0) {
             this._treeUpdateRoot(size);
           } else {
-            this._treeAddChild(traceNames, tracesIdxs, size);
+            this._treeAddChild(traceNames, size);
           }
         } else {
           if (tracesEntry.nameIdx === 0) {
             this._treeUpdateRoot(size);
           } else {
-            this._treeUpdateChild(traceNames, tracesIdxs, size);
+            this._treeUpdateChild(traceNames, size);
           }
         }
       }
@@ -305,14 +304,13 @@ function escapeHtml(html){
       this.treeData.root.updateMatrix(size, true);
     },
 
-    _treeAddChild: function s__treeAddChild(traceNames, tracesIdxs, size) {
+    _treeAddChild: function s__treeAddChild(traceNames, size) {
       var names = this.names;
       var currentNode = this.treeData.root;
       for (var i = traceNames.length - 1; i >=0; i--) {
         var nodeOption = {
           name: names[traceNames[i]],
-          nameIdx: traceNames[i],
-          traceIdx: tracesIdxs[i]
+          nameIdx: traceNames[i]
         };
         if (i === 0) {
           nodeOption.selfSize = size;
@@ -328,7 +326,7 @@ function escapeHtml(html){
       }
     },
 
-    _treeUpdateChild: function s__treeUpdateChild(traceNames, traceIdxs, size) {
+    _treeUpdateChild: function s__treeUpdateChild(traceNames, size) {
       var currentNode = this.treeData.root;
       for (var i = traceNames.length - 1; i >= 0; i--) {
         currentNode = currentNode.findChildrenByNameIdx(traceNames[i]);
@@ -346,7 +344,6 @@ function escapeHtml(html){
   function Node(options) {
     this.name = options.name;
     this.nameIdx = options.nameIdx;
-    this.traceIdx = [options.traceIdx];
     this.children = [];
     this.parent = null;
     this.matrix = {
