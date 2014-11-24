@@ -31,6 +31,7 @@
         if (traceCount > this.limit) {
           traceCount = this.limit;
           this.minimizeTracePool();
+          this._elements.pad.style.width = '200%';
         }
         this._elements.pad.width = traceCount * baseWidth;
       }
@@ -49,16 +50,20 @@
     },
 
     minimizeTracePool: function PL_minimizeTracePool() {
-      var temp = [];
       var step = Math.round(this.tracePool.length / this.limit);
+      var start = 0, bound = 0, entry = null, temp = [];
       for (var chunk = 0; chunk < this.limit; chunk ++) {
-        var start = chunk * step;
-        var bound = (chunk + 1) * step;
+        start = chunk * step;
+        bound = (chunk + 1) * step;
         if (bound > this.tracePool.length) {
           bound = this.tracePool.length;
         }
-        temp[chunk] = {"size":0,"traceIdx":[]};
-        var entry = temp[chunk];
+        if (typeof this.tracePool[start] === 'undefined') {
+          continue;
+        }
+        temp[chunk] = {"size":0, "traceIdx":[]};
+        temp[chunk].timestamp = this.tracePool[start].timestamp;
+        entry = temp[chunk];
         for (var i = start; i < bound; i++) {
           entry.size = entry.size + this.tracePool[i].size;
           entry.traceIdx.push(this.tracePool[i].traceIdx); 
@@ -77,16 +82,24 @@
       // var start = baseLine;
       ctx.clearRect(0, 0, this._elements.pad.width, this._elements.pad.height);
       ctx.strokeStyle = 'black';
+      var entry, entryHeight, prevEntry, entryDuration;
       for (var i = 0, len = tracePool.length; i < len; i++) {
-        var entry = tracePool[i];
-        var entryHeight = (entry.size / this.heightRatio);
+        entry = tracePool[i];
+        entryHeight = (entry.size / this.heightRatio);
+        if (i > 0) {
+          prevEntry = tracePool[i-1];
+          entryDuration = Math.round((entry.timestamp - prevEntry.timestamp)) * 4 / 1000;
+        } else {
+          entryDuration = 0;
+        }
+    
         ctx.lineWidth = 5;
         ctx.beginPath();
-        ctx.moveTo(10 + i * 10, baseLine);
-        ctx.lineTo(10 + i * 10, baseLine - entryHeight);
-        ctx.strokeStyle = '#000000';
+        ctx.moveTo(entryDuration + 10 + i * 10, baseLine);
+        ctx.lineTo(entryDuration + 10 + i * 10, baseLine - entryHeight);
+        ctx.strokeStyle = '#ff0000';
         if (entryHeight < 0) {
-          ctx.strokeStyle = '#00ff00';
+          ctx.strokeStyle = '#0000ff';
         } 
         ctx.stroke();
         // ctx.strokeStyle = '#000000';
