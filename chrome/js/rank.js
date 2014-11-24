@@ -34,8 +34,11 @@ function humanReadable(bytes) {
   };
 
   RankManager.prototype.filterBY = function RM_filterBY(nameIdx) {
-    var filterHist = this.store.getFilterList(+nameIdx);
-    return this.sortBY(filterHist, this.defaultSort);
+    var p = this.store.getFilterList(nameIdx);
+    p.then(function(values) {
+      var sort =  this.sortBY(this.store.filterNodes, this.defaultSort);
+      this.template(this.store.filterNodes);
+    }.bind(this));
   };
 
   RankManager.prototype.showRankList = function RM_showRankList() {
@@ -61,7 +64,8 @@ function humanReadable(bytes) {
         fnName + '</span>' +
       '</li>';
     }
-    infoTable = '<ul>' +
+    infoTable = '<button type="button" data-root="0" id="backRoot">/</button><br/>' +
+                '<ul>' +
                   '<li> ' +
                     '<span class="sortable" data-id="selfAccu">Self Accu</span>' +
                     '<span class="sortable" data-id="totalAccu">Total Accu</span>' +
@@ -86,6 +90,10 @@ function humanReadable(bytes) {
       sortItem = matches[j];
       sortItem.addEventListener('click', this);
     }
+    var backRoot = this._elements.infoTable.querySelector('#backRoot');
+    backRoot.addEventListener('click', function(){
+      this.showRankList();
+    }.bind(this));
   };
 
   RankManager.prototype.handleEvent = function RM_handleEvent(evt) {
@@ -102,8 +110,8 @@ function humanReadable(bytes) {
         if (typeof evt.target.dataset.filter !== 'undefined') {
           var nameIdx = +evt.target.dataset.filter;
           console.log('filter by nameIdx:' + nameIdx);
-          this.filterHist = this.filterBY(this.rankHist, nameIdx);
-          this.template(this.filterHist);
+          this.filterHist = this.filterBY(nameIdx);
+//          this.template(this.filterHist);
         }
         break;
       default:

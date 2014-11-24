@@ -12,7 +12,13 @@ function escapeHtml(html){
     this.traces = null;
     this.allocated = null;
     this.treeData = {};
+    // all data
     this.uniData = [];
+    // for filter
+    this.filterCount = 0;
+    this.lookupList = {};
+    this.filterNodes = [];
+
     this.init();
   }
 
@@ -49,18 +55,21 @@ function escapeHtml(html){
       var names = this.names,
           traces = this.traces,
           allocated = this.allocated,
-          hist = this.uniData;
+          hist = this.uniData,
+          lookupList = this.lookupList;
       var t, e, i, j;
 
       for (i = 0; i < names.length; i++) {
         names[i] = escapeHtml(names[i]);
-        hist[i] = {
+        var n = {
           nameIdx: i,
-          parent: null, childs: [],
+          childs: [],
           selfAccu: 0, totalAccu: 0,
           selfSize: 0, totalSize: 0,
           selfPeak: 0, totalPeak: 0
           };
+        hist.push(n);
+        lookupList[i] = n;
       }
     },
 
@@ -169,10 +178,46 @@ function escapeHtml(html){
       }
     },
 
+    /**
+     * only show childs of target nameIdx
+     */
+    gatherList: function s_gatherList(nameIdx, done) {
+      var n = this.lookupList[nameIdx];
+//      if (this.filterCount % 100 === 0) {
+//        alert('n:'+ n.nameIdx + '/cnt:'+this.filterCount);
+//      }
+      this.filterCount += 1;
+      this.filterNodes.push(n);
+      var workers = [];
+      if (n.childs.length) {
+        for(var i = 0, len = n.childs.length; i < len; i++) {
+          var idx = n.childs[i];
+          var p = new Promise(function(resolve) {
+            this.gatherList(idx, resolve);
+          }.bind(this));
+          workers.push(p);
+        }
+      }
+      if (workers.length) {
+        Promise.all(workers).then(function(values) {
+          done();
+        });
+      } else {
+        done();
+      }
+    },
+
     // for ranklist filter
     getFilterList: function s_getFilterList(nameIdx) {
-      var hist = this.uniData;
-      return this.hist;
+      this.filterNodes = [];
+      this.filterCount = 0;
+      var p = new Promise(function(resolve) {
+        this.gatherList(nameIdx, resolve);
+      }.bind(this));
+//      p.then(function(values) {
+//        return this.filterNodes;
+//      }.bind(this));
+      return p;
     },
 
     // for ranklist
@@ -192,13 +237,19 @@ function escapeHtml(html){
         }
         // add parent and childs
         parentTraceEntry = traces[tracesEntry.parentIdx];
-        hist[tracesEntry.nameIdx].parent = parentTraceEntry.nameIdx;
-        // XXX hack
+//        // add childs
         if (typeof hist[parentTraceEntry.nameIdx] === 'undefined') {
           continue;
-        }
-        if (hist[parentTraceEntry.nameIdx].childs.indexOf(tracesEntry.nameIdx) < 0) {
-          hist[parentTraceEntry.nameIdx].childs.push(tracesEntry.nameIdx);
+        } else {
+//          console.log('log child '+ tracesEntry.nameIdx);
+          if (hist[parentTraceEntry.nameIdx].childs.length === 0) {
+            hist[parentTraceEntry.nameIdx].childs.push(tracesEntry.nameIdx);
+//            console.log('directly to parent '+ parentTraceEntry.nameIdx);
+          }
+          else if (hist[parentTraceEntry.nameIdx].childs.indexOf(tracesEntry.nameIdx) < 0) {
+            hist[parentTraceEntry.nameIdx].childs.push(tracesEntry.nameIdx);
+//            console.log('to parent '+ parentTraceEntry.nameIdx);
+          }
         }
 
         // update self stat
