@@ -29,7 +29,7 @@
   </head>
 
   <body>
-    <!--     
+    <!--
     <p id="hello"></p>
     <xul:button oncommand="startProfiler();" label="Start Profile"/>
     <xul:button oncommand="stopProfiler();" label="Stop Profile"/>
@@ -62,7 +62,7 @@
              </ul>
              -->
           </section>
-          <section id="TreePanel" class="panel">
+          <section id="treePanel" class="panel">
             <h3>Tree View</h3>
           </section>
         </div>
