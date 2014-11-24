@@ -16,6 +16,7 @@ function app_start(gFront) {
     startSearch: document.getElementById('startSearch'),
     startButton: document.getElementById('startRecord'),
     stopButton: document.getElementById('stopRecord'),
+    resetButton: document.getElementById('resetRecord'),
     infoTable: document.getElementById('infoTable')
   };
   var hubOption = {

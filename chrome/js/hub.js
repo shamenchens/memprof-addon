@@ -9,7 +9,7 @@
     start: function HUB_start () {
       this._elements.startButton.addEventListener('click', this);
       this._elements.stopButton.addEventListener('click', this);
-      this._elements.startSearch.addEventListener('click', this);
+      this._elements.resetButton.addEventListener('click', this);
       this._elements.searchBar.addEventListener('keyup', this);
       window.addEventListener('dataReady', this);
     },
@@ -23,6 +23,9 @@
               break;
             case this._elements.stopButton:
               this.stopRecord();
+              break;
+            case this._elements.resetButton:
+              this.resetRecord();
               break;
             case this._elements.startSearch:
               this.showSearchPanel();
@@ -57,6 +60,10 @@
     //   this._elements.infoTable.textContent = 'loading.....';
     // },
 
+    resetRecord: function HUB_resetRecord(evt) {
+      window.dispatchEvent(new CustomEvent('reset-record'));
+    },
+
     // showInfo: function HUB_showInfo(evt) {
     //   this._elements.infoTable.textContent = 'done!!!';
     // },
@@ -68,6 +75,8 @@
     stop: function HUB_stop() {
       this._elements.startButton.removeEventListener('click', this);
       this._elements.stopButton.removeEventListener('click', this);
+      this._elements.resetButton.removeEventListener('click', this);
+      this._elements.searchBar.removeEventListener('keyup', this);
       window.removeEventListener('dataReady', this);
     },
 

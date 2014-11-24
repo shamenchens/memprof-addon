@@ -8,11 +8,13 @@
   TreeManager.prototype = {
     start: function tm_start() {
       window.addEventListener('dataReady', this);
+      window.addEventListener('reset-record', this);
       window.addEventListener('subset-allocated', this);
     },
 
     stop: function tm_stop() {
       window.removeEventListener('dataReady', this);
+      window.removeEventListener('reset-record', this);
       window.removeEventListener('subset-allocated', this);
     },
 
@@ -24,12 +26,15 @@
         case 'subset-allocated':
           this.handleSubset();
           break;
+        case 'reset-record':
+          this.cleanTreeView();
+          break;
         default:
           break;
       }
     },
 
-    handleSubset(): function tm_handleSubset() {
+    handleSubset: function tm_handleSubset() {
       console.log('subset-allocated handler!!');
       //this.showTreeView();
     },
@@ -40,6 +45,10 @@
       this.addTreeNode(treeData.root, 0);
       this.addNodeEventListener();
       // this.collapseRoot();
+    },
+
+    cleanTreeView: function tm_cleanTreeView() {
+      this._elements.treePanel.innerHTML = '';
     },
 
     addTreeHeader: function tm_addTreeHeader() {

@@ -25,12 +25,16 @@ function getMousePos(canvas, evt) {
   PadManager.prototype = {
     start: function PL_start () {
       window.addEventListener('dataReady', this);
+      window.addEventListener('reset-record', this);
       this._elements.pad.addEventListener('mousedown', this);
       this._elements.pad.addEventListener('mouseup', this);
     },
 
     handleEvent: function PL_handleEvent(evt) {
       switch(evt.type) {
+        case 'reset-record':
+          this.cleanPad();
+          break;
         case 'dataReady':
           this.drawTrace();
           break;
@@ -186,6 +190,9 @@ function getMousePos(canvas, evt) {
 
     stop: function PL_stop() {
       window.removeEventListener('dataReady', this);
+      window.removeEventListener('reset-record', this);
+      this._elements.pad.removeEventListener('mousedown', this);
+      this._elements.pad.removeEventListener('mouseup', this);
     }
   };
   exports.PadManager = PadManager;
