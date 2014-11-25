@@ -1,6 +1,6 @@
 'use strict';
-var escapeHtmlDiv = document.createElement('div');
 function escapeHtml(html){
+  var escapeHtmlDiv = document.createElement('div');
   var text = document.createTextNode(html);
   escapeHtmlDiv.appendChild(text);
   return escapeHtmlDiv.innerHTML;
@@ -11,6 +11,7 @@ function escapeHtml(html){
     this.names = null;
     this.traces = null;
     this.allocated = null;
+    this.originAllocated = null;
     this.treeData = {};
     // all data
     this.uniData = [];
@@ -25,6 +26,12 @@ function escapeHtml(html){
   Store.prototype = {
     init: function s_init() {
       window.addEventListener('search', this);
+      window.addEventListener('subset-allocated', this);
+    },
+
+    stop: function s_stop() {
+      window.removeEventListener('search', this);
+      window.removeEventListener('subset-allocated', this);
     },
 
     handleEvent: function s_handleEvent(evt) {
@@ -32,13 +39,18 @@ function escapeHtml(html){
         case 'search':
           console.log(evt.detail.term.length);
           break;
+        case 'subset-allocated':
+          this.handleSubetAllocated(evt);
+          break;
       }
     },
 
     create: function s_create(names, traces, allocated) {
       this.names = names;
       this.traces = traces;
-      this.allocated = allocated;
+      this.originAllocated = allocated;
+      // generate this.allocated
+      this.subsetAllocated(0, this.originAllocated.length);
       this.preprocessData();
       // notify others data is ready
       window.dispatchEvent(new CustomEvent('dataReady'));
@@ -49,6 +61,18 @@ function escapeHtml(html){
       this.traces = null;
       this.allocated = null;
       this.uniData = null;
+    },
+
+    handleSubetAllocated: function s_handleSubetAllocated(evt) {
+      this.subsetAllocated(evt.detail.startPoint, evt.detail.endPoint);
+      if (this.allocated.length > 0) {
+        // notify others data is ready
+        window.dispatchEvent(new CustomEvent('dataReady'));
+      }
+    },
+
+    subsetAllocated: function s_subsetAllocated(start, end) {
+      this.allocated = this.originAllocated.slice(start, end);
     },
 
     preprocessData: function s_preprocessData() {

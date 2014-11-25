@@ -22,10 +22,14 @@ function humanReadable(bytes) {
 
   RankManager.prototype.start = function RM_start() {
     window.addEventListener('dataReady', this);
+    window.addEventListener('start-record', this);
+    window.addEventListener('subset-allocated', this);
   };
 
   RankManager.prototype.stop = function RM_stop() {
     window.removeEventListener('dataReady', this);
+    window.removeEventListener('start-record', this);
+    window.removeEventListener('subset-allocated', this);
   };
 
   RankManager.prototype.sortBY = function RM_sortBY(hist, key) {
@@ -42,12 +46,27 @@ function humanReadable(bytes) {
   };
 
   RankManager.prototype.showRankList = function RM_showRankList() {
+   console.log('showRankList');
    this.rankHist = this.store.getRankList();
    this.rankHist = this.sortBY(this.rankHist, this.defaultSort);
    this.template(this.rankHist);
   };
 
+  RankManager.prototype.showLoading = function RM_showLoading(evt) {
+    this._elements.infoTable.textContent = 'loading.....';
+  },
+
+  RankManager.prototype.cleanInfoTable = function RM_cleanInfoTable() {
+    this._elements.infoTable.innerHTML = '';
+  };
+
+  RankManager.prototype.handleSubset = function RM_handleSubset() {
+    //this.cleanInfoTable();
+    //this.showLoading();
+  };
+
   RankManager.prototype.template = function RM_template(hist) {
+    console.log('pizza template');
     var names = this.store.getNames();
     var infoTable = '';
     for (var i = 0; i < hist.length; i++) {
@@ -98,6 +117,12 @@ function humanReadable(bytes) {
 
   RankManager.prototype.handleEvent = function RM_handleEvent(evt) {
     switch (evt.type) {
+      case 'start-record':
+        this.showLoading();
+        break;
+      case 'subset-allocated':
+        this.handleSubset();
+        break;
       case 'dataReady':
         this.showRankList();
         break;

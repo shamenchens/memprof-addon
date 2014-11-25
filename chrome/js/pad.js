@@ -1,4 +1,12 @@
 'use strict';
+function getMousePos(canvas, evt) {
+  var rect = canvas.getBoundingClientRect();
+  return {
+    x: evt.clientX - rect.left,
+    y: evt.clientY - rect.top
+  };
+}
+
 (function(exports) {
   function PadManager (option) {
     this._elements = option.elements;
@@ -6,12 +14,19 @@
     this.tracePool = [];
     this.limit = 1000;
     this.heightRatio = 0;
+    this.widthRatio = 0;
     this.padHeight = 800;
+    this.rangeDrawable = false;
+    this.rangeStart = 0;
+    this.rangeEnd = 0;
+    this.step = 0;
   }
 
   PadManager.prototype = {
     start: function PL_start () {
       window.addEventListener('dataReady', this);
+      this._elements.pad.addEventListener('mousedown', this);
+      this._elements.pad.addEventListener('mouseup', this);
     },
 
     handleEvent: function PL_handleEvent(evt) {
@@ -19,7 +34,57 @@
         case 'dataReady':
           this.drawTrace();
           break;
+        case 'mousedown':
+          this._initRange(evt);
+          break;
+        case 'mouseup':
+          this._setupRange(evt);
+          break;
+        case 'mousemove':
+          this._updateRange(evt);
+          break;
+        case 'mouseout':
+          this._closeRange();
+          break;
       }
+    },
+
+    _initRange: function PL_initRange(e) {
+      this.rangeDrawable = true;
+      this._elements.pad.addEventListener('mousemove', this);
+      this._elements.pad.addEventListener('mouseout', this);
+      var mousePos = getMousePos(this._elements.pad, e);
+      this.rangeStart = mousePos.x / this.widthRatio;
+      console.log(mousePos.x + ':' + mousePos.y);
+    },
+    
+    _setupRange: function PL_setupRange(e) {
+      if (this.rangeDrawable == false) {
+        return;
+      }
+      var mousePos = getMousePos(this._elements.pad, e);
+      this.rangeEnd = mousePos.x / this.widthRatio;
+      var evtInfo = {'detail' : {}};
+      evtInfo.detail.startPoint = this.rangeStart * this.step;
+      evtInfo.detail.endPoint = this.rangeEnd * this.step;
+      // clear up pad.
+      this.cleanPad();
+      this._closeRange();
+      window.dispatchEvent(new CustomEvent('subset-allocated', evtInfo));
+    },
+    
+    _updateRange: function PL_updateRange(e) {
+      if (this.rangeDrawable == false) {
+        return;
+      }
+      var mousePos = getMousePos(this._elements.pad, e);
+      console.log(mousePos.x + ':' + mousePos.y);
+    },
+    
+    _closeRange: function PL_closeRange() {
+      this.rangeDrawable = false;
+      this._elements.pad.removeEventListener('mousemove', this);
+      this._elements.pad.removeEventListener('mouseout', this);
     },
 
     setupCanvas: function PL_setupCanvas() {
@@ -35,7 +100,9 @@
         }
         this._elements.pad.width = traceCount * baseWidth;
       }
-
+      var rect = this._elements.pad.getBoundingClientRect();
+      var rectWidth = (rect.right - rect.left);
+      this.widthRatio = Math.round(this._elements.pad.width / rectWidth);
       // setup height ratio
       var maxSize = 0;
       var entry = null;
@@ -50,11 +117,11 @@
     },
 
     minimizeTracePool: function PL_minimizeTracePool() {
-      var step = Math.round(this.tracePool.length / this.limit);
+      this.step = Math.round(this.tracePool.length / this.limit);
       var start = 0, bound = 0, entry = null, temp = [];
       for (var chunk = 0; chunk < this.limit; chunk ++) {
-        start = chunk * step;
-        bound = (chunk + 1) * step;
+        start = chunk * this.step;
+        bound = (chunk + 1) * this.step;
         if (bound > this.tracePool.length) {
           bound = this.tracePool.length;
         }
@@ -73,6 +140,11 @@
       this.tracePool = temp;
     },
 
+    cleanPad: function PL_cleanPad() {
+      var ctx = this._elements.pad.getContext('2d');
+      ctx.clearRect(0, 0, this._elements.pad.width, this._elements.pad.height);
+    },
+
     drawTrace: function PL_drawTrace() {
       this.setupCanvas();
       var baseWidth = 10;
@@ -80,7 +152,7 @@
       var ctx = this._elements.pad.getContext('2d');
       var tracePool = this.tracePool;
       // var start = baseLine;
-      ctx.clearRect(0, 0, this._elements.pad.width, this._elements.pad.height);
+      this.cleanPad();
       ctx.strokeStyle = 'black';
       var entry, entryHeight, prevEntry, entryDuration;
       for (var i = 0, len = tracePool.length; i < len; i++) {
