@@ -1,9 +1,9 @@
 'use strict';
+var escapeHtmlDiv = document.createElement('div');
 function escapeHtml(html){
   var text = document.createTextNode(html);
-  var div = document.createElement('div');
-  div.appendChild(text);
-  return div.innerHTML;
+  escapeHtmlDiv.appendChild(text);
+  return escapeHtmlDiv.innerHTML;
 }
 
 (function(exports) {
