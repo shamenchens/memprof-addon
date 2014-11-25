@@ -30,7 +30,7 @@
           }
           break;
         case 'dataReady':
-          this.showInfo();
+          //this.showInfo();
           break;
         case 'keyup':
           switch (evt.target) {
@@ -46,20 +46,20 @@
 
     startRecord: function HUB_startRecord(evt) {
       window.dispatchEvent(new CustomEvent('start-record'));
-      this.showLoading();
+      // this.showLoading();
     },
 
     stopRecord: function HUB_stopRecord(evt) {
       window.dispatchEvent(new CustomEvent('stop-record'));
     },
 
-    showLoading: function HUB_showLoading(evt) {
-      this._elements.infoTable.textContent = 'loading.....';
-    },
+    // showLoading: function HUB_showLoading(evt) {
+    //   this._elements.infoTable.textContent = 'loading.....';
+    // },
 
-    showInfo: function HUB_showInfo(evt) {
-      // this._elements.infoTable.textContent = 'done!!!';
-    },
+    // showInfo: function HUB_showInfo(evt) {
+    //   this._elements.infoTable.textContent = 'done!!!';
+    // },
 
     showSearchPanel: function HUB_showSearchPanel() {
       this._elements.searchPanel.classList.toggle('active');

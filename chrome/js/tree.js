@@ -8,10 +8,12 @@
   TreeManager.prototype = {
     start: function tm_start() {
       window.addEventListener('dataReady', this);
+      window.addEventListener('subset-allocated', this);
     },
 
     stop: function tm_stop() {
       window.removeEventListener('dataReady', this);
+      window.removeEventListener('subset-allocated', this);
     },
 
     handleEvent: function tm_handleEvent(event) {
@@ -19,9 +21,17 @@
         case 'dataReady':
           this.showTreeView();
           break;
+        case 'subset-allocated':
+          this.handleSubset();
+          break;
         default:
           break;
       }
+    },
+
+    handleSubset(): function tm_handleSubset() {
+      console.log('subset-allocated handler!!');
+      //this.showTreeView();
     },
 
     showTreeView: function tm_showTreeView() {
