@@ -40,6 +40,7 @@
           <section id="hubPanel" class="panel">
             <button type="button" id="startRecord">Start</button>
             <button type="button" id="stopRecord">Stop</button>
+            <button type="button" id="resetRecord">Reset</button>
             <button type="button" id="startSearch">Search</button>
           </section>
         </div>

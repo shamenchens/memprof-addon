@@ -23,6 +23,7 @@ function humanReadable(bytes) {
   RankManager.prototype.start = function RM_start() {
     window.addEventListener('dataReady', this);
     window.addEventListener('start-record', this);
+    window.addEventListener('reset-record', this);
     window.addEventListener('subset-allocated', this);
   };
 
@@ -30,6 +31,7 @@ function humanReadable(bytes) {
     window.removeEventListener('dataReady', this);
     window.removeEventListener('start-record', this);
     window.removeEventListener('subset-allocated', this);
+    window.removeEventListener('reset-record', this);
   };
 
   RankManager.prototype.sortBY = function RM_sortBY(hist, key) {
@@ -119,6 +121,9 @@ function humanReadable(bytes) {
     switch (evt.type) {
       case 'start-record':
         this.showLoading();
+        break;
+      case 'reset-record':
+        this.cleanInfoTable();
         break;
       case 'subset-allocated':
         this.handleSubset();
