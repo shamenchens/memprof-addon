@@ -70,7 +70,7 @@
         '</span>' +
         '</div>';
       this._elements.treePanel.innerHTML += treeNode;
-      if (node.children.length > 0) {
+      if (node.children.length > 0 && depth < 3) {
         for (var i in node.children) {
           this.addTreeNode(node.children[i], depth + 1);
         }
