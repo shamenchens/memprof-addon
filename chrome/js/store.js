@@ -293,6 +293,8 @@ function escapeHtml(html){
 
       this._treeAddRoot(names[0], 0);
 
+      console.log('traces length: ' + traces.length);
+      console.log('allocate length: ' + allocated.length);
       for (i = 0, len = allocated.length; i < len; i++) {
         allocatedEntry = allocated[i];
         size = allocatedEntry.size;
@@ -421,12 +423,11 @@ function escapeHtml(html){
 
   Node.prototype = {
     findChildrenByNameIdx: function(nameIdx) {
-      for (var i in this.children) {
-        if (this.children[i].nameIdx === nameIdx) {
-          return this.children[i];
-        }
+      if (this.children[nameIdx]) {
+        return this.children[nameIdx];
+      } else {
+        return null;
       }
-      return null;
     },
 
     addChild: function(nodeOption) {

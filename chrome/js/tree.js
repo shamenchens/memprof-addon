@@ -25,10 +25,18 @@
     },
 
     showTreeView: function tm_showTreeView() {
+      console.time('getTreeData');
       var treeData = this.store.getTreeData();
+      console.timeEnd('getTreeData');
+      console.time('addTreeHeader');
       this.addTreeHeader();
+      console.timeEnd('addTreeHeader');
+      console.time('addTreeNode');
       this.addTreeNode(treeData.root, 0);
+      console.timeEnd('addTreeNode');
+      console.time('addNodeEventListener');
       this.addNodeEventListener();
+      console.timeEnd('addNodeEventListener');
       // this.collapseRoot();
     },
 
