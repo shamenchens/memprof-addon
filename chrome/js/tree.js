@@ -3,6 +3,7 @@
   function TreeManager(option) {
     this._elements = option.elements;
     this.store = option.store;
+    this.treeFrag = document.createDocumentFragment();
   }
 
   TreeManager.prototype = {
@@ -26,14 +27,15 @@
 
     showTreeView: function tm_showTreeView() {
       console.time('getTreeData');
-      var treeData = this.store.getTreeData();
+      this.treeData = this.store.getTreeData();
       console.timeEnd('getTreeData');
       console.time('addTreeHeader');
       this.addTreeHeader();
       console.timeEnd('addTreeHeader');
       console.time('addTreeNode');
-      this.addTreeNode(treeData.root, 0);
+      this.addTreeNode(this.treeData[0], 0);
       console.timeEnd('addTreeNode');
+      console.log(this._elements.treePanel);
       console.time('addNodeEventListener');
       this.addNodeEventListener();
       console.timeEnd('addNodeEventListener');
@@ -50,7 +52,7 @@
         '<span>totalPeak</span>' +
         '<span>name</span>' +
         '</div>';
-      this._elements.treePanel.innerHTML = treeHeader;
+      this.treeFrag.innerHTML = treeHeader;
     },
 
     addTreeNode: function tm_walk(node, depth) {
@@ -69,16 +71,17 @@
         '<span title="' + node.name + '">' + node.name + '</span>' +
         '</span>' +
         '</div>';
-      this._elements.treePanel.innerHTML += treeNode;
+      this.treeFrag.innerHTML += treeNode;
       if (node.children.length > 0 && depth < 3) {
         for (var i in node.children) {
-          this.addTreeNode(node.children[i], depth + 1);
+          this.addTreeNode(this.treeData[node.children[i]], depth + 1);
         }
       }
     },
 
     addNodeEventListener: function tm_addNodeEventListener() {
       var self = this;
+      this._elements.treePanel.innerHTML = this.treeFrag.innerHTML;
       Array.prototype.forEach.call(document.querySelectorAll('.collapseButton'),
         function(element) {
           element.addEventListener('click', function(e) {

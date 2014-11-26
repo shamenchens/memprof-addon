@@ -287,26 +287,56 @@ function escapeHtml(html){
       var traces = this.traces;
       var allocated = this.allocated;
       var treeData = this.treeData;
+      console.log('traces: ', traces.length);
+      console.log('allocated: ', allocated.length);
 
-      var traceIdx, tracesEntry, allocatedEntry,
-          traceNames, size, i, len;
+      var traceIdx, traceEntry, treeEntry, allocatedEntry, size, i, len;
 
-      this._treeAddRoot(names[0], 0);
+      for (i = 0, len = traces.length; i < len; i++) {
+        traceEntry = traces[i];
+        if (traceEntry.nameIdx != 0) {
+          treeData[traceEntry.parentIdx].children.push(i);
+        }
+        traceEntry.matrix = {
+          selfSize: 0,
+          selfAccu: 0,
+          selfPeak: 0,
+          totalSize: 0,
+          totalAccu: 0,
+          totalPeak: 0
+        };
+        traceEntry.name = names[traceEntry.nameIdx];
+        traceEntry.children = [];
+        treeData[i] = traceEntry;
+      }
 
-      console.log('traces length: ' + traces.length);
-      console.log('allocate length: ' + allocated.length);
       for (i = 0, len = allocated.length; i < len; i++) {
         allocatedEntry = allocated[i];
         size = allocatedEntry.size;
-        traceIdx = allocatedEntry.traceIdx;
-        tracesEntry = traces[allocatedEntry.traceIdx];
-        traceNames = this._getTraceNames(tracesEntry);
+        treeEntry = treeData[allocatedEntry.traceIdx];
 
-        if (tracesEntry.nameIdx === 0) {
-          this._treeUpdateRoot(size);
-        } else {
-          // update or add child
-          this._treeAddOrUpdateChild(traceNames, size);
+        treeEntry.matrix.selfSize += size;
+        treeEntry.matrix.totalSize += size;
+        if (size > 0) {
+          treeEntry.matrix.selfAccu += size;
+          treeEntry.matrix.totalAccu += size;
+        }
+        if (treeEntry.matrix.selfSize > treeEntry.matrix.selfPeak) {
+          treeEntry.matrix.selfPeak = treeEntry.matrix.selfSize;
+        }
+        if (treeEntry.matrix.totalSize > treeEntry.matrix.totalPeak) {
+          treeEntry.matrix.totalPeak = treeEntry.matrix.totalSize;
+        }
+        while (treeEntry.parentIdx !== 0) {
+          // Update total
+          treeEntry = treeData[treeEntry.parentIdx];
+          treeEntry.matrix.totalSize += size;
+          if (size > 0) {
+            treeEntry.matrix.totalAccu += size;
+          }
+          if (treeEntry.matrix.totalSize > treeEntry.matrix.totalPeak) {
+            treeEntry.matrix.totalPeak = treeEntry.matrix.totalSize;
+          }
         }
       }
 
