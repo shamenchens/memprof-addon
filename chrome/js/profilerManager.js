@@ -28,11 +28,7 @@
   };
 
   ProfilerManager.prototype.startRecord = function PM_startRecord() {
-    var self =  this;
-    self.memoryProfiler.startProfiler();
-    // this.memprofiler.resetProfiler().then(function(){
-    //   self.memoryProfiler.startProfiler();
-    // });
+    this.memoryProfiler.startProfiler();
   };
 
   ProfilerManager.prototype.resetRecord = function PM_resetRecord() {
