@@ -33,7 +33,10 @@ function app_start(gFront) {
   padManager.start();
 
   var rankOption = {
-    'elements': {'infoTable': document.getElementById('infoTable')},
+    'elements': {
+      'infoTable': document.getElementById('infoTable'),
+      'filterTable': document.getElementById('filterTable')
+    },
     'store': store
   };
   var rankManager = new RankManager(rankOption);
