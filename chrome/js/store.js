@@ -211,6 +211,10 @@ function escapeHtml(html){
 //        alert('n:'+ n.nameIdx + '/cnt:'+this.filterCount);
 //      }
       this.filterCount += 1;
+      if (this.filterCount > 20000) { // jump out if met some error
+        alert('loop over 20000');
+        done();
+      }
       this.filterNodes.push(n);
       var workers = [];
       if (n.childs.length) {

@@ -39,11 +39,11 @@ function humanReadable(bytes) {
     return hist;
   };
 
-  RankManager.prototype.filterBY = function RM_filterBY(nameIdx) {
+  RankManager.prototype.showfilterList = function RM_showfilterList(nameIdx) {
     var p = this.store.getFilterList(nameIdx);
     p.then(function(values) {
       var sort =  this.sortBY(this.store.filterNodes, this.defaultSort);
-      this.template(this.store.filterNodes);
+      this.filterTemplate(this.store.filterNodes);
     }.bind(this));
   };
 
@@ -51,7 +51,7 @@ function humanReadable(bytes) {
    console.log('showRankList');
    this.rankHist = this.store.getRankList();
    this.rankHist = this.sortBY(this.rankHist, this.defaultSort);
-   this.template(this.rankHist);
+   this.infoTemplate(this.rankHist);
   };
 
   RankManager.prototype.showLoading = function RM_showLoading(evt) {
@@ -67,8 +67,15 @@ function humanReadable(bytes) {
     //this.showLoading();
   };
 
-  RankManager.prototype.template = function RM_template(hist) {
-    console.log('pizza template');
+  RankManager.prototype.infoTemplate = function RM_template(hist) {
+    this._template(hist, 'info');
+  },
+
+  RankManager.prototype.filterTemplate = function RM_template(hist) {
+    this._template(hist, 'filter');
+  },
+
+  RankManager.prototype._template = function RM__template(hist, target) {
     var names = this.store.getNames();
     var infoTable = '';
     for (var i = 0; i < hist.length; i++) {
@@ -88,30 +95,46 @@ function humanReadable(bytes) {
     infoTable = '<button type="button" data-root="0" id="backRoot">/</button><br/>' +
                 '<ul>' +
                   '<li> ' +
-                    '<span class="sortable" data-id="selfAccu">Self Accu</span>' +
-                    '<span class="sortable" data-id="totalAccu">Total Accu</span>' +
-                    '<span class="sortable" data-id="selfSize">Self Size</span>' +
-                    '<span class="sortable" data-id="totalSize">Total Size</span>' +
-                    '<span class="sortable" data-id="selfPeak">Self Peak</span>' +
-                    '<span class="sortable" data-id="totalPeak">Total Peak</span>' +
+                    '<span class="sortable" data-id="selfAccu" data-target="' + target +
+                    '">Self Accu</span>' +
+                    '<span class="sortable" data-id="totalAccu" data-target="' + target +
+                    '">Total Accu</span>' +
+                    '<span class="sortable" data-id="selfSize" data-target="' + target +
+                    '">Self Size</span>' +
+                    '<span class="sortable" data-id="totalSize" data-target="' + target +
+                    '">Total Size</span>' +
+                    '<span class="sortable" data-id="selfPeak" data-target="' + target +
+                    '">Self Peak</span>' +
+                    '<span class="sortable" data-id="totalPeak" data-target="' + target +
+                    '">Total Peak</span>' +
                     '<span>name</span>' +
                   '</li>' +
                  infoTable +
                 '</ul>';
-    this._elements.infoTable.innerHTML = infoTable;
-    var matches = this._elements.infoTable.querySelectorAll('span.sortable');
+    var element;
+    if (target === 'filter') {
+      element = this._elements.filterTable;
+      this._elements.infoTable.hidden = true;
+      this._elements.filterTable.hidden = false;
+    } else {
+      element = this._elements.infoTable;
+      this._elements.filterTable.hidden = true;
+      this._elements.infoTable.hidden = false;
+    }
+    element.innerHTML = infoTable;
+    var matches = element.querySelectorAll('span.sortable');
     var sortItem = null;
     for (var j = 0; j < matches.length; j ++) {
       sortItem = matches[j];
       sortItem.addEventListener('click', this);
     }
-    matches = this._elements.infoTable.querySelectorAll('span.filterable');
+    matches = element.querySelectorAll('span.filterable');
     sortItem = null;
     for (var j = 0; j < matches.length; j ++) {
       sortItem = matches[j];
       sortItem.addEventListener('click', this);
     }
-    var backRoot = this._elements.infoTable.querySelector('#backRoot');
+    var backRoot = element.querySelector('#backRoot');
     backRoot.addEventListener('click', function(){
       this.showRankList();
     }.bind(this));
@@ -133,15 +156,23 @@ function humanReadable(bytes) {
         break;
       case 'click':
         if (typeof evt.target.dataset.id !== 'undefined') {
-          console.log('sort:' + evt.target.dataset.id);
-          this.rankHist = this.sortBY(this.rankHist, evt.target.dataset.id);
-          this.template(this.rankHist);
+//          alert('sort:' + evt.target.dataset.id);
+          // filter list
+          if (typeof evt.target.dataset.target !== 'undefined') {
+//            alert(evt.target.dataset.target);
+            if (evt.target.dataset.target === 'filter') {
+              this.filterHist = this.sortBY(this.store.filterNodes, evt.target.dataset.id);
+              this.filterTemplate(this.filterHist);
+            } else {
+              this.rankHist = this.sortBY(this.rankHist, evt.target.dataset.id);
+              this.infoTemplate(this.rankHist);
+            }
+          }
         }
         if (typeof evt.target.dataset.filter !== 'undefined') {
           var nameIdx = +evt.target.dataset.filter;
-          console.log('filter by nameIdx:' + nameIdx);
-          this.filterHist = this.filterBY(nameIdx);
-//          this.template(this.filterHist);
+          alert('filter:' + nameIdx);
+          this.showfilterList(nameIdx);
         }
         break;
       default:

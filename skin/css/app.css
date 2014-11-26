@@ -163,31 +163,37 @@ section#padPanel canvas  {
 }
 
 /*infoTable*/
+section#filterTable,
 section#infoTable {
   width: 90%;
   height: 300px;
   overflow: auto;
 }
 
+section#filterTable > ul,
 section#infoTable > ul{
   margin:20px 0px 0px 50px;
   list-style: none;
 }
 
+section#filterTable ul > li,
 section#infoTable ul > li{
   margin: -4px 0px 0px 0px;
   padding: 0px;
   background-color: #b8b8b8;
 }
 
+section#filterTable ul > li:nth-child(even),
 section#infoTable ul > li:nth-child(even){
   background-color: #afafaf;
 }
 
+section#filterTable ul > li:hover,
 section#infoTable ul > li:hover{
   background-color: #fff;
 }
 
+section#filterTable ul > li > span,
 section#infoTable ul > li > span{
   display: inline-block;
   width: 68px;
@@ -198,11 +204,13 @@ section#infoTable ul > li > span{
   border-bottom: 0px;
 }
 
+section#filterTable ul > li:first-child > span,
 section#infoTable ul > li:first-child > span{
   border-bottom: 1px;
   font-weight: bold;
 }
 
+section#filterTable ul > li:last-child > span,
 section#infoTable ul > li:last-child > span{
   border: 1px solid #c8c8c8;
 }
@@ -212,10 +220,12 @@ span.sortable {
   cursor: pointer;
 }
 
+section#filterTable ul > li > span:not(:first-child),
 section#infoTable ul > li > span:not(:first-child){
   border-left: 0px;
 }
 
+section#filterTable ul > li > span:last-child,
 section#infoTable ul > li > span:last-child {
   width: calc(100% - 480px);
   text-overflow : ellipsis;

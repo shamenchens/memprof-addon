@@ -63,6 +63,8 @@
              </ul>
              -->
           </section>
+          <section id="filterTable" class="panel">
+          </section>
           <section id="treePanel" class="panel">
             <h3>Tree View</h3>
           </section>
