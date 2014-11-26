@@ -3,6 +3,7 @@
   function TreeManager(option) {
     this._elements = option.elements;
     this.store = option.store;
+    this.treeFrag = document.createDocumentFragment();
   }
 
   TreeManager.prototype = {
@@ -40,9 +41,10 @@
     },
 
     showTreeView: function tm_showTreeView() {
-      var treeData = this.store.getTreeData();
+      this.treeData = this.store.getTreeData();
       this.addTreeHeader();
-      this.addTreeNode(treeData.root, 0);
+      this.addTreeNode(this.treeData[0], 0);
+      this._elements.treePanel.innerHTML = this.treeFrag.innerHTML;
       this.addNodeEventListener();
       // this.collapseRoot();
     },
@@ -61,7 +63,7 @@
         '<span>totalPeak</span>' +
         '<span>name</span>' +
         '</div>';
-      this._elements.treePanel.innerHTML = treeHeader;
+      this.treeFrag.innerHTML = treeHeader;
     },
 
     addTreeNode: function tm_walk(node, depth) {
@@ -80,10 +82,10 @@
         '<span title="' + node.name + '">' + node.name + '</span>' +
         '</span>' +
         '</div>';
-      this._elements.treePanel.innerHTML += treeNode;
+      this.treeFrag.innerHTML += treeNode;
       if (node.children.length > 0) {
         for (var i in node.children) {
-          this.addTreeNode(node.children[i], depth + 1);
+          this.addTreeNode(this.treeData[node.children[i]], depth + 1);
         }
       }
     },
