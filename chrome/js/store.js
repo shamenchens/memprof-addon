@@ -338,16 +338,11 @@ function escapeHtml(html){
         treeEntry = treeData[allocatedEntry.traceIdx];
 
         treeEntry.matrix.selfSize += size;
-        treeEntry.matrix.totalSize += size;
         if (size > 0) {
           treeEntry.matrix.selfAccu += size;
-          treeEntry.matrix.totalAccu += size;
         }
         if (treeEntry.matrix.selfSize > treeEntry.matrix.selfPeak) {
           treeEntry.matrix.selfPeak = treeEntry.matrix.selfSize;
-        }
-        if (treeEntry.matrix.totalSize > treeEntry.matrix.totalPeak) {
-          treeEntry.matrix.totalPeak = treeEntry.matrix.totalSize;
         }
         while (treeEntry.parentIdx !== 0) {
           // Update total
