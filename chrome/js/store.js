@@ -214,6 +214,7 @@ function escapeHtml(html){
       if (this.filterCount > 20000) { // jump out if met some error
         alert('loop over 20000');
         done();
+        return;
       }
       this.filterNodes.push(n);
       var workers = [];
