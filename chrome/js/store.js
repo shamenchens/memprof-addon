@@ -349,6 +349,15 @@ function escapeHtml(html){
         if (treeEntry.matrix.selfSize > treeEntry.matrix.selfPeak) {
           treeEntry.matrix.selfPeak = treeEntry.matrix.selfSize;
         }
+        if (allocatedEntry.traceIdx !== 0) {
+          treeEntry.matrix.totalSize += size;
+          if (size > 0) {
+            treeEntry.matrix.totalAccu += size;
+          }
+          if (treeEntry.matrix.totalSize > treeEntry.matrix.totalPeak) {
+            treeEntry.matrix.totalPeak = treeEntry.matrix.totalSize;
+          }
+        }
         while (treeEntry.parentIdx !== 0) {
           // Update total
           treeEntry = treeData[treeEntry.parentIdx];
